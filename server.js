@@ -311,9 +311,13 @@ async function serveNcmApi(options) {
 
   /** @type {import('express').Express & ExpressExtension} */
   const appExt = app
-  appExt.server = app.listen(port, host, () => {
-    console.log(`server running @ http://${host ? host : 'localhost'}:${port}`)
-  })
+  if (process.env.VERCEL) {
+    console.log('Running in Vercel serverless environment')
+  } else {
+    appExt.server = app.listen(port, host, () => {
+      console.log(`server running @ http://${host ? host : 'localhost'}:${port}`)
+    })
+  }
 
   return appExt
 }
